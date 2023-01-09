@@ -1,10 +1,6 @@
 package com.example.qrcodescanner
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.getSystemService
 import com.example.qrcodescanner.databinding.ActivityMainBinding
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -31,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         val tvQRContent = binding.tvContent
         val tvWifiInfo = binding.tvWifiInfo
+        val tvDistance = binding.tvDistance
 
         try {
             val barcodeEncoder = BarcodeEncoder()
@@ -62,12 +58,22 @@ class MainActivity : AppCompatActivity() {
         val info = wifiManager.connectionInfo
         val ssid = info.ssid
         val rssi = info.rssi
+        val freqInMHz = info.frequency
         tvWifiInfo.text = info.toString()
 
         val result = wifiManager.scanResults.size
         Log.e("listWifiInfo", result.toString())
 
+        val distance = calculateDistance(rssi.toDouble(), freqInMHz.toDouble())
+        tvDistance.text = distance.toString()
+//        Log.e("Distance", distance.toString())
 
+
+    }
+
+    fun calculateDistance(signalLevelInDb: Double, freqInMHz: Double): Double {
+        val exp = (27.55 - 20 * Math.log10(freqInMHz) + Math.abs(signalLevelInDb)) / 20.0
+        return Math.pow(10.0, exp)
     }
 
 }
