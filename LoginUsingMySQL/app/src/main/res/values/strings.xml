@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LoginUsingMySQL</string>
+    <string name="loginhere">Login here</string>
+    <string name="signup">Signup</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="fullname">Fullname</string>
+    <string name="login">Login</string>
+    <string name="signuphere">Signup here</string>
+</resources>
