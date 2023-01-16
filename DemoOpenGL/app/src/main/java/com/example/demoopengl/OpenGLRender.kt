@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class OpenGLRender: GLSurfaceView.Renderer {
     private lateinit var mTriangle: Triangle
-    private lateinit var mSquare: Square
+//    private lateinit var mSquare: Square
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
         // Set the background frame color
         val (r, g, b) = getColorRGB(255,255, 255)
@@ -16,7 +16,7 @@ class OpenGLRender: GLSurfaceView.Renderer {
         // initialize a triangle
         mTriangle = Triangle()
         // initialize a square
-        mSquare = Square()
+//        mSquare = Square()
     }
 
     override fun onSurfaceChanged(unused: GL10?, width: Int, height: Int) {
