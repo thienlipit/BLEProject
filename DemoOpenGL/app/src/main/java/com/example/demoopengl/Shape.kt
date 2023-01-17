@@ -8,10 +8,16 @@ import java.nio.ShortBuffer
 
 // number of coordinates per vertex in this array
 const val COORDS_PER_VERTEX = 3
+//var triangleCoords = floatArrayOf(     // in counterclockwise order:
+//    0.0f, 0.58f, 0.0f,      // top
+//    -0.5f, -0.29f, 0.0f,    // bottom left
+//    0.5f, -0.29f, 0.0f      // bottom right
+//)
+
 var triangleCoords = floatArrayOf(     // in counterclockwise order:
-    0.0f, 0.58f, 0.0f,      // top
-    -0.5f, -0.29f, 0.0f,    // bottom left
-    0.5f, -0.29f, 0.0f      // bottom right
+    0.0f, 0.6f, 0.0f,      // top
+    -0.4f, -0.4f, 0.0f,    // bottom left
+    -0.3f, -0.3f, 0.0f      // bottom right
 )
 
 //private val vertexShaderCode =

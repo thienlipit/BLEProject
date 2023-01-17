@@ -25,16 +25,17 @@ class OpenGLRender: GLSurfaceView.Renderer {
         mSquare = Square()
     }
 
-    override fun onSurfaceChanged(unused: GL10?, width: Int, height: Int) {
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
 
         val ratio: Float = width.toFloat() / height.toFloat()
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
+
     }
 
-    override fun onDrawFrame(p0: GL10?) {
+    override fun onDrawFrame(gl: GL10?) {
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
@@ -51,6 +52,4 @@ class OpenGLRender: GLSurfaceView.Renderer {
     private fun getColorRGB(red:Int, green: Int, blue: Int): Triple<Float, Float, Float> {
         return Triple( red/255f, green/255f, blue/255f)
     }
-
-
 }
