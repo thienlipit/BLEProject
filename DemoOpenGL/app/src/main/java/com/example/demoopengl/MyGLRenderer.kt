@@ -14,6 +14,8 @@ class MyGLRenderer: GLSurfaceView.Renderer {
     private val viewMatrix = FloatArray(16)
     private val rotationMatrix = FloatArray(16)
 
+    public var translateX = 0f
+    public var translatey = 0f
     @Volatile
     var angle: Float = 0f
 
@@ -36,7 +38,8 @@ class MyGLRenderer: GLSurfaceView.Renderer {
         val ratio: Float = width.toFloat() / height.toFloat()
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
+//        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 1000f)
 
     }
 
@@ -45,7 +48,10 @@ class MyGLRenderer: GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+        Matrix.setLookAtM(viewMatrix, 0,
+            translateX, translatey, 1f,
+            translateX, translatey, 0f,
+            0f, 1.0f, 0.0f)
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
@@ -64,10 +70,10 @@ class MyGLRenderer: GLSurfaceView.Renderer {
         // Draw triangle
 
 //        mSquare.draw(scratch)
-        mTriangle.draw(scratch)
+//        mTriangle.draw(scratch)
 
 //        mSquare.draw(vPMatrix)
-//        mTriangle.draw(vPMatrix)
+        mTriangle.draw(vPMatrix)
     }
 
 
