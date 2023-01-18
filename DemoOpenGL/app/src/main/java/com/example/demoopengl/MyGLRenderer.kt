@@ -3,14 +3,19 @@ package com.example.demoopengl
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.os.SystemClock
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class OpenGLRender: GLSurfaceView.Renderer {
+class MyGLRenderer: GLSurfaceView.Renderer {
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
     private val vPMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
+    private val rotationMatrix = FloatArray(16)
+
+    @Volatile
+    var angle: Float = 0f
 
     private lateinit var mTriangle: Triangle
     private lateinit var mSquare: Square
@@ -45,9 +50,27 @@ class OpenGLRender: GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
-        mSquare.draw(vPMatrix)
-        mTriangle.draw(vPMatrix)
+        val scratch = FloatArray(16)
+        // Create a rotation transformation for the triangle
+//        val time = SystemClock.uptimeMillis() % 4000L
+//        val angle = 0.090f * time.toInt()
+        Matrix.setRotateM(rotationMatrix, 0, angle, 0f, 0f, -1.0f)
+
+        // Combine the rotation matrix with the projection and camera view
+        // Note that the vPMatrix factor *must be first* in order
+        // for the matrix multiplication product to be correct.
+        Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0)
+
+        // Draw triangle
+
+//        mSquare.draw(scratch)
+        mTriangle.draw(scratch)
+
+//        mSquare.draw(vPMatrix)
+//        mTriangle.draw(vPMatrix)
     }
+
+
 
     private fun getColorRGB(red:Int, green: Int, blue: Int): Triple<Float, Float, Float> {
         return Triple( red/255f, green/255f, blue/255f)

@@ -8,17 +8,17 @@ import java.nio.ShortBuffer
 
 // number of coordinates per vertex in this array
 const val COORDS_PER_VERTEX = 3
-//var triangleCoords = floatArrayOf(     // in counterclockwise order:
-//    0.0f, 0.58f, 0.0f,      // top
-//    -0.5f, -0.29f, 0.0f,    // bottom left
-//    0.5f, -0.29f, 0.0f      // bottom right
-//)
-
 var triangleCoords = floatArrayOf(     // in counterclockwise order:
-    0.0f, 0.6f, 0.0f,      // top
-    -0.4f, -0.4f, 0.0f,    // bottom left
-    -0.3f, -0.3f, 0.0f      // bottom right
+    0.0f, 0.5f, 0.0f,      // top
+    -0.5f, -0.29f, 0.0f,    // bottom left
+    0.5f, -0.29f, 0.0f      // bottom right
 )
+
+//var triangleCoords = floatArrayOf(     // in counterclockwise order:
+//    0.0f, 0.6f, 0.0f,      // top
+//    -0.4f, -0.4f, 0.0f,    // bottom left
+//    -0.3f, -0.3f, 0.0f      // bottom right
+//)
 
 //private val vertexShaderCode =
 //    "attribute vec4 vPosition;" +
@@ -219,7 +219,6 @@ class Square {
     private var mColorHandle: Int = 0
 
 
-
     fun draw(mvpMatrix: FloatArray) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram)
@@ -253,19 +252,13 @@ class Square {
             // Pass the projection and view transformation to the shader
             GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
 
-            // Draw the triangle
+            // Draw the square
             GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.size,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer)
 
             // Disable vertex array
             GLES20.glDisableVertexAttribArray(positionHandle)
-//
-//            // Draw the square
-//            GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.size,
-//                GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
-//
-//            // Disable vertex array
-//            GLES20.glDisableVertexAttribArray(it)
+
         }
     }
 }

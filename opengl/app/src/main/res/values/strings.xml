@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">opengl</string>
+    <string name="draw_polygon">Draw polygon</string>
+    <string name="bouncycubeactivity">BouncyCubeActivity</string>
+</resources>
