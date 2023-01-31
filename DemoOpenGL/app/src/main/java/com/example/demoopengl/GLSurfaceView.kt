@@ -19,7 +19,7 @@ class MyGLSurfaceView : GLSurfaceView {
 
     constructor(context: Context?) : super(context) {
         init()
-        renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        renderMode = RENDERMODE_WHEN_DIRTY
     }
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
@@ -39,8 +39,14 @@ class MyGLSurfaceView : GLSurfaceView {
 
         val x: Float = e.x
         val y: Float = e.y
+        val rawx: Float = e.rawX
+        val rawy: Float = e.rawY
         Log.e("x", x.toString())
         Log.e("y", y.toString())
+        Log.e("rawX", rawx.toString())
+        Log.e("rawY", rawy.toString())
+        Log.e("action", e.action.toString())
+        Log.e("actionMasked", e.actionMasked.toString())
 
         when (e.action) {
             MotionEvent.ACTION_MOVE -> {

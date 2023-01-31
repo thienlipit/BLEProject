@@ -1,21 +1,31 @@
 package com.example.demoopengl
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.opengl.EGL14.eglGetCurrentContext
 import android.opengl.GLES20
+import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.os.SystemClock
+import com.example.demoopengl.shape.Square
+import com.example.demoopengl.shape.Triangle
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
+
 class MyGLRenderer: GLSurfaceView.Renderer {
+
+    private var context: Context? = null
+
+    private var uColorLocation = 0
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
     private val vPMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
     private val rotationMatrix = FloatArray(16)
 
-    public var translateX = 0f
-    public var translatey = 0f
+    var translateX = 0f
+    var translatey = 0f
     @Volatile
     var angle: Float = 0f
 
@@ -23,13 +33,26 @@ class MyGLRenderer: GLSurfaceView.Renderer {
     private lateinit var mSquare: Square
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
         // Set the background frame color
-        val (r, g, b) = getColorRGB(255,255, 255)
+        val (r, g, b) = getColorRGB(0,0, 0)
         GLES20.glClearColor(r, g, b, 1f)
 
         // initialize a triangle
         mTriangle = Triangle()
         // initialize a square
         mSquare = Square()
+
+
+
+//        val vertexShaderSource: String? = TextResourceReader().readTextFileFromResource(eglGetCurrentContext(), R.raw.simple_vertex_shader)
+//        val fragmentShaderSource: String? =
+//            context?.let { TextResourceReader().readTextFileFromResource(it, R.raw.simple_fragment_shader) }
+//
+//
+//        val vertexShader: Int = ShaderHelper().compileVertexShader(vertexShaderSource)
+//        val fragmentShader: Int = ShaderHelper().compileFragmentShader(fragmentShaderSource)
+//        val program = ShaderHelper().linkProgram(vertexShader, fragmentShader);
+//
+//        uColorLocation = glGetUniformLocation(program, "u_Color");
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -72,8 +95,12 @@ class MyGLRenderer: GLSurfaceView.Renderer {
 //        mSquare.draw(scratch)
 //        mTriangle.draw(scratch)
 
-//        mSquare.draw(vPMatrix)
-        mTriangle.draw(vPMatrix)
+        mSquare.draw(vPMatrix)
+//        mTriangle.draw(vPMatrix)
+
+        // Draw the table.
+//        glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
+//        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
 
