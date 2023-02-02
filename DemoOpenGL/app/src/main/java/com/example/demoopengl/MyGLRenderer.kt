@@ -39,6 +39,7 @@ class MyGLRenderer: GLSurfaceView.Renderer {
         // initialize a triangle
         mTriangle = Triangle()
         // initialize a square
+
         mSquare = Square()
 
 
