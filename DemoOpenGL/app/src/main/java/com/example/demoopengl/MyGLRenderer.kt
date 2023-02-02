@@ -1,11 +1,11 @@
 package com.example.demoopengl
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.opengl.EGL14.eglGetCurrentContext
+import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
+import android.opengl.GLUtils
 import android.opengl.Matrix
 import com.example.demoopengl.shape.Square
 import com.example.demoopengl.shape.Triangle
@@ -94,7 +94,7 @@ class MyGLRenderer: GLSurfaceView.Renderer {
         // Draw triangle
 
 //        mSquare.draw(scratch)
-//        mTriangle.draw(scratch)
+        mTriangle.draw(scratch)
 
         mSquare.draw(vPMatrix)
 //        mTriangle.draw(vPMatrix)
@@ -103,7 +103,6 @@ class MyGLRenderer: GLSurfaceView.Renderer {
 //        glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
 //        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
-
 
 
     private fun getColorRGB(red:Int, green: Int, blue: Int): Triple<Float, Float, Float> {
