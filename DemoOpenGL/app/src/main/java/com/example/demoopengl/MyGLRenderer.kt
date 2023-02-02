@@ -93,15 +93,12 @@ class MyGLRenderer: GLSurfaceView.Renderer {
 
         // Draw triangle
 
-//        mSquare.draw(scratch)
-        mTriangle.draw(scratch)
+        mSquare.draw(scratch)
+//        mTriangle.draw(scratch)
 
-        mSquare.draw(vPMatrix)
+//        mSquare.draw(vPMatrix)
 //        mTriangle.draw(vPMatrix)
 
-        // Draw the table.
-//        glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
-//        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
 
