@@ -76,7 +76,8 @@ class Square2 {
     init {
         val vertexShader: Int = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode)
         val fragmentShader: Int = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode)
-
+        Log.d("TEST", vertexShader.toString())
+        Log.d("TEST`", fragmentShader.toString())
         // create empty OpenGL ES Program
         mProgram = GLES20.glCreateProgram().also {
 

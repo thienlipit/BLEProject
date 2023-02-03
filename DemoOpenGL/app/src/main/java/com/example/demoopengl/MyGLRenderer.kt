@@ -14,9 +14,6 @@ import javax.microedition.khronos.opengles.GL10
 
 
 class MyGLRenderer: GLSurfaceView.Renderer {
-
-    private var context: Context? = null
-
     private var uColorLocation = 0
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
     private val vPMatrix = FloatArray(16)
@@ -42,18 +39,6 @@ class MyGLRenderer: GLSurfaceView.Renderer {
 
         mSquare = Square()
 
-
-
-//        val vertexShaderSource: String? = TextResourceReader().readTextFileFromResource(eglGetCurrentContext(), R.raw.simple_vertex_shader)
-//        val fragmentShaderSource: String? =
-//            context?.let { TextResourceReader().readTextFileFromResource(it, R.raw.simple_fragment_shader) }
-//
-//
-//        val vertexShader: Int = ShaderHelper().compileVertexShader(vertexShaderSource)
-//        val fragmentShader: Int = ShaderHelper().compileFragmentShader(fragmentShaderSource)
-//        val program = ShaderHelper().linkProgram(vertexShader, fragmentShader);
-//
-//        uColorLocation = glGetUniformLocation(program, "u_Color");
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
