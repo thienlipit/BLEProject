@@ -1,31 +1,33 @@
 package com.example.demoopengl.guideopengl
 
-
-import android.app.Activity
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.os.SystemClock
+import android.util.Log
 import com.example.demoopengl.guideopengl.guideshape.LoadMap
+import com.example.demoopengl.guideopengl.guideshape.Square
 import com.example.demoopengl.guideopengl.guideshape.Square2
 import com.example.demoopengl.guideopengl.guideshape.Triangle
+import java.lang.Float.toString
+import java.util.Arrays.deepToString
+import java.util.Arrays.toString
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+import kotlin.Unit.toString
 
 class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
     private lateinit var mTriangle: Triangle
     private lateinit var mSquare: Square2
     private lateinit var mLoadMap: LoadMap
 
+    private lateinit var newSquare: Square
+
     @Volatile
     var angle: Float = 0f
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-
-        // initialize a star
-
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
 
         // initialize a triangle
         mTriangle = Triangle()
@@ -33,6 +35,8 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
         mLoadMap = LoadMap(context)
         // initialize a square
         mSquare = Square2()
+
+        newSquare = Square()
 
     }
 
@@ -60,7 +64,7 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
         Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0) //for motion
         //-----------end define camera view
 
-//        mTriangle.draw()
+        //mTriangle.draw()
 //        mSquare.draw()
 //        mStar.draw()
 
@@ -69,7 +73,10 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 //        mTriangle.draw(scratch)
 
 
-        mLoadMap.draw(scratch)
+        //mLoadMap.draw(scratch)
+//        mTriangle.draw(scratch)
+
+        newSquare.draw(unused)
 
     }
 
@@ -80,15 +87,21 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
 
-    override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
+    override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
+        // Sets the current view port to the new size.
         GLES20.glViewport(0, 0, width, height)
+
+//        gl.glMatrixMode(GL10.GL_PROJECTION)
+        for (i in 0..15){
+            Log.d("Proj $i", projectionMatrix[i].toString())
+        }
 
         //----start define projection
         val ratio: Float = width.toFloat() / height.toFloat()
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 10f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 5f, 10f)
         //----end define projection
 
     }

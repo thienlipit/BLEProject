@@ -47,7 +47,7 @@ class Triangle {
                 "}"
 
     // Set color with red, green, blue and alpha (opacity) values
-    val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
+    var color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
 
     private var vertexBuffer: FloatBuffer =
         // (number of coordinate values * 4 bytes per float)
@@ -76,6 +76,16 @@ class Triangle {
         }
     }
 
+    fun getVertexBuffer(coords: FloatArray): FloatBuffer {
+        val b = ByteBuffer.allocateDirect(coords.size * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .put(coords)
+        b.position(0)
+        return b;
+
+    }
+
     private var mProgram: Int
 
     init {
@@ -96,6 +106,8 @@ class Triangle {
             // creates OpenGL ES program executables
             GLES20.glLinkProgram(it)
         }
+
+
     }
 
     private var positionHandle: Int = 0
@@ -133,7 +145,6 @@ class Triangle {
 
             // Draw the triangle
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
-
             // Disable vertex array
             GLES20.glDisableVertexAttribArray(it)
         }
@@ -144,41 +155,74 @@ class Triangle {
         GLES20.glUseProgram(mProgram)
 
         // get handle to vertex shader's vPosition member
-        positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition").also {
+//        positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition").also {
+//
+//            // Enable a handle to the triangle vertices
+//            GLES20.glEnableVertexAttribArray(it)
+//
+//            // Prepare the triangle coordinate data
+//            GLES20.glVertexAttribPointer(
+//                it,
+//                COORDS_PER_VERTEX,
+//                GLES20.GL_FLOAT,
+//                false,
+//                vertexStride,
+//                vertexBuffer
+//            )
+//
+//            // get handle to fragment shader's vColor member
+//            mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor").also { colorHandle ->
+//
+//                // Set color for drawing the triangle
+//                GLES20.glUniform4fv(colorHandle, 1, color, 0)
+//            }
+//
+//            //----start code for apply projection and camera view
+//            // get handle to shape's transformation matrix
+//            vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+//
+//            // Pass the projection and view transformation to the shader
+//            GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
+//
+//            // Draw the triangle
+//            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
+//
+//            // Disable vertex array
+//            GLES20.glDisableVertexAttribArray(positionHandle)
+//            //----end code for apply projection and camera view
+//        }
 
-            // Enable a handle to the triangle vertices
-            GLES20.glEnableVertexAttribArray(it)
 
-            // Prepare the triangle coordinate data
+        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor")
+        // Draw the triangle
+        //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
+        GLES20.glEnableVertexAttribArray(positionHandle)
+
+        vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+
+            // Pass the projection and view transformation to the shader
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
+
+        (1..3).forEach { index ->
+            color = floatArrayOf(0.2f * index, 0.76953125f, 0.22265625f, 1.0f)
+            var triangleCoords = floatArrayOf(     // in counterclockwise order:
+                0.0f, 1f, 0.0f,     // top
+                -0.5f + (index / 0.2f ) , -0.311004243f, 0.0f,    // bottom left
+                -0.5f + (index / 0.2f ) + index + 0.2f , -0.311004243f, 0.0f     // bottom right
+            )
+            val b = getVertexBuffer(triangleCoords)
             GLES20.glVertexAttribPointer(
-                it,
+                positionHandle,
                 COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT,
                 false,
                 vertexStride,
-                vertexBuffer
+                b
             )
-
-            // get handle to fragment shader's vColor member
-            mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor").also { colorHandle ->
-
-                // Set color for drawing the triangle
-                GLES20.glUniform4fv(colorHandle, 1, color, 0)
-            }
-
-            //----start code for apply projection and camera view
-            // get handle to shape's transformation matrix
-            vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
-
-            // Pass the projection and view transformation to the shader
-            GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
-
-            // Draw the triangle
+            GLES20.glUniform4fv(mColorHandle, 1, color, 0)
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
-
-            // Disable vertex array
-            GLES20.glDisableVertexAttribArray(positionHandle)
-            //----end code for apply projection and camera view
         }
+
+        GLES20.glDisableVertexAttribArray(positionHandle)
     }
 }
