@@ -4,17 +4,11 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.util.Log
-import com.example.demoopengl.guideopengl.guideshape.LoadMap
-import com.example.demoopengl.guideopengl.guideshape.Square
-import com.example.demoopengl.guideopengl.guideshape.Square2
-import com.example.demoopengl.guideopengl.guideshape.Triangle
-import java.lang.Float.toString
-import java.util.Arrays.deepToString
-import java.util.Arrays.toString
+import com.example.demoopengl.guideopengl.guideshape.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
-import kotlin.Unit.toString
+import kotlin.math.cos
+import kotlin.math.sin
 
 class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
     private lateinit var mTriangle: Triangle
@@ -22,12 +16,13 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
     private lateinit var mLoadMap: LoadMap
 
     private lateinit var newSquare: Square
+    private lateinit var circle: Circle
 
     @Volatile
     var angle: Float = 0f
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+        GLES20.glClearColor(0.4f, 0.4f, 0.4f, 1.0f)
 
         // initialize a triangle
         mTriangle = Triangle()
@@ -38,8 +33,9 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
         newSquare = Square()
 
-    }
+        circle = Circle()
 
+    }
 
     private val rotationMatrix = FloatArray(16)
     override fun onDrawFrame(unused: GL10) {
@@ -64,8 +60,8 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
         Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0) //for motion
         //-----------end define camera view
 
-        //mTriangle.draw()
-//        mSquare.draw()
+//        mTriangle.draw()
+//        mSquare.draw(scratch)
 //        mStar.draw()
 
 
@@ -73,13 +69,30 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 //        mTriangle.draw(scratch)
 
 
-        //mLoadMap.draw(scratch)
+//        mLoadMap.draw(scratch)
 //        mTriangle.draw(scratch)
 
-        newSquare.draw(unused)
+//        newSquare.draw(unused)
+        circle.draw(scratch)
+
+
+
+//        for (i in 0..steps){
+//            var newX = radius * sin(angle11*i)
+//            var newY = -radius * cos(angle11*i)
+//            GLES20.GL_TRIANGLES
+//            GLES20.glVertexAttrib3f(0, 0f, 0f, 0f)
+//            GLES20.glVertexAttrib3f(0, prevX, prevY, 0f)
+//            GLES20.glVertexAttrib3f(0, newX, newY, 0f)
+//            GLES20.
+//
+//
+//            prevX = newX
+//            prevY = newY
+//        }
+
 
     }
-
 
     // Define a projection
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -90,11 +103,6 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
         // Sets the current view port to the new size.
         GLES20.glViewport(0, 0, width, height)
-
-//        gl.glMatrixMode(GL10.GL_PROJECTION)
-        for (i in 0..15){
-            Log.d("Proj $i", projectionMatrix[i].toString())
-        }
 
         //----start define projection
         val ratio: Float = width.toFloat() / height.toFloat()

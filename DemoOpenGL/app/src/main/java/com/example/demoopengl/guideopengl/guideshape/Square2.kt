@@ -1,6 +1,7 @@
 package com.example.demoopengl.guideopengl.guideshape
 
 import android.opengl.GLES20
+import android.opengl.Matrix
 import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -9,18 +10,19 @@ import java.nio.ShortBuffer
 
 // number of coordinates per vertex in this array
 var squareCoords = floatArrayOf(
-    -0.5f,  0.5f, 0.0f,      // top left
-    -0.5f, -0.5f, 0.0f,      // bottom left
-    0.5f, -0.5f, 0.0f,      // bottom right
-    0.5f,  0.5f, 0.0f       // top right
+    -0.25f,  0.25f, 0.0f,      // top left
+    -0.25f, -0.25f, 0.0f,      // bottom left
+    0.25f, -0.25f, 0.0f,      // bottom right
+    0.25f,  0.25f, 0.0f       // top right
 )
 
 class Square2 {
 
     private val vertexShaderCode =
+        "uniform mat4 uMVPMatrix;" +
         "attribute vec4 vPosition;" +
                 "void main() {" +
-                "  gl_Position = vPosition;" +
+                "  gl_Position = uMVPMatrix * vPosition;" +
                 "}"
 
     private val fragmentShaderCode =
@@ -99,7 +101,11 @@ class Square2 {
     private val vertexStride: Int = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
 
 
-    fun draw() {
+    fun draw(mvpMatrix: FloatArray) {
+
+
+
+        var vPMatrixHandle: Int = 0
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram)
 
@@ -128,9 +134,17 @@ class Square2 {
 
 //            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount) //This line for draw triangle
 
+            // get handle to shape's transformation matrix
+            vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+
+            // Pass the projection and view transformation to the shader
+            GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
+
             // Draw the square
             Log.d("SiZe", drawOrder.size.toString())
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.size, GLES20.GL_UNSIGNED_SHORT, drawListBuffer)
+            GLES20.glDrawElements(
+                GLES20.GL_TRIANGLES, drawOrder.size,
+                GLES20.GL_UNSIGNED_SHORT, drawListBuffer)
 
             // Disable vertex array
             GLES20.glDisableVertexAttribArray(it)

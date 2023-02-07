@@ -12,10 +12,10 @@ import javax.microedition.khronos.opengles.GL10
 class Square {
     // Our vertices.
     private val vertices = floatArrayOf(
-        -1.0f, 1.0f, 0.0f,  // 0, Top Left
-        -1.0f, -1.0f, 0.0f,  // 1, Bottom Left
-        1.0f, -1.0f, 0.0f,  // 2, Bottom Right
-        1.0f, 1.0f, 0.0f
+        -0.5f, 0.5f, 0.0f,  // 0, Top Left
+        -0.5f, -0.5f, 0.0f,  // 1, Bottom Left
+        0.5f, -0.5f, 0.0f,  // 2, Bottom Right
+        0.5f, 0.5f, 0.0f
     )
 
     // The order we like to connect them.

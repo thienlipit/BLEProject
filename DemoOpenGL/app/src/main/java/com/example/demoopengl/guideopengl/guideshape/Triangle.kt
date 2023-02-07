@@ -1,6 +1,7 @@
 package com.example.demoopengl.guideopengl.guideshape
 
 import android.opengl.GLES20
+import android.opengl.Matrix
 import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -45,7 +46,6 @@ class Triangle {
                 "void main() {" +
                 "  gl_FragColor = vColor;" +
                 "}"
-
     // Set color with red, green, blue and alpha (opacity) values
     var color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
 
@@ -206,9 +206,9 @@ class Triangle {
         (1..3).forEach { index ->
             color = floatArrayOf(0.2f * index, 0.76953125f, 0.22265625f, 1.0f)
             var triangleCoords = floatArrayOf(     // in counterclockwise order:
-                0.0f, 1f, 0.0f,     // top
+                0.0f, 0.622008459f, 0.0f,     // top
                 -0.5f + (index / 0.2f ) , -0.311004243f, 0.0f,    // bottom left
-                -0.5f + (index / 0.2f ) + index + 0.2f , -0.311004243f, 0.0f     // bottom right
+                0.5f + (index / 0.2f ) + index + 0.2f , -0.311004243f, 0.0f     // bottom right
             )
             val b = getVertexBuffer(triangleCoords)
             GLES20.glVertexAttribPointer(
