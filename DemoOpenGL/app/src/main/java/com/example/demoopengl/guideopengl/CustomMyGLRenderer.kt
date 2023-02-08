@@ -17,6 +17,7 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
     private lateinit var newSquare: Square
     private lateinit var circle: Circle
+    private lateinit var girdline: Girdline
 
     @Volatile
     var angle: Float = 0f
@@ -34,6 +35,7 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
         newSquare = Square()
 
         circle = Circle()
+        girdline = Girdline()
 
     }
 
@@ -64,7 +66,6 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 //        mSquare.draw(scratch)
 //        mStar.draw()
 
-
 //        mTriangle.draw(vPMatrix) //without motion
 //        mTriangle.draw(scratch)
 
@@ -73,23 +74,9 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 //        mTriangle.draw(scratch)
 
 //        newSquare.draw(unused)
-        circle.draw(scratch)
+//        circle.draw(scratch)
 
-
-
-//        for (i in 0..steps){
-//            var newX = radius * sin(angle11*i)
-//            var newY = -radius * cos(angle11*i)
-//            GLES20.GL_TRIANGLES
-//            GLES20.glVertexAttrib3f(0, 0f, 0f, 0f)
-//            GLES20.glVertexAttrib3f(0, prevX, prevY, 0f)
-//            GLES20.glVertexAttrib3f(0, newX, newY, 0f)
-//            GLES20.
-//
-//
-//            prevX = newX
-//            prevY = newY
-//        }
+        girdline.draw(scratch, 3, 0.01f)
 
 
     }
@@ -109,7 +96,7 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 5f, 10f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 1000f)
         //----end define projection
 
     }

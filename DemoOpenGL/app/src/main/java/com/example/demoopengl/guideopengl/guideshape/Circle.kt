@@ -1,25 +1,26 @@
 package com.example.demoopengl.guideopengl.guideshape
 
 import android.opengl.GLES20
+import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import kotlin.math.cos
 import kotlin.math.sin
 
-const val steps = 360
-const val radius = 0.5f
-const val angle11 = 3.14f * 4f * radius / steps
+const val steps = 4
+const val radius = 0.1f
+const val degree = 3.14f *2f / steps
 
 class Circle {
     var xPos = 0f
     var yPos = 0f
 
     var prevX = xPos
-    var prevY = yPos - radius
+    var prevY = yPos + radius
 
-    var newX = radius * sin(angle11)
-    var newY = -radius * cos(angle11)
+    var newX = radius * sin(degree)
+    var newY = radius * cos(degree)
 
 
     var triangleCoords = floatArrayOf(     // in counterclockwise order:
@@ -121,9 +122,8 @@ class Circle {
     fun draw(mvpMatrix: FloatArray) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram)
-
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor")
-        // Draw the triangle
+
         //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
         GLES20.glEnableVertexAttribArray(positionHandle)
 
@@ -133,10 +133,10 @@ class Circle {
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
 
         (0..steps).forEach { index ->
-             newX = radius * sin(angle11*index)
-             newY = -radius * cos(angle11*index)
+             newX = xPos + radius * sin(degree*index)
+             newY = yPos + radius * cos(degree*index)
 
-            color = floatArrayOf(0.2f * index, 0.76953125f, 0.22265625f, 1.0f)
+//            color = floatArrayOf(0.2f * index, 0.76953125f, 0.22265625f, 1.0f)
             var triangleCoords = floatArrayOf(     // in counterclockwise order:
                 0.0f, 0.0f, 0.0f,     // top
                 prevX , prevY, 0.0f,    // bottom left
