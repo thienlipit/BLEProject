@@ -8,7 +8,7 @@ import java.nio.FloatBuffer
 import kotlin.math.cos
 import kotlin.math.sin
 
-const val steps = 4
+const val steps = 360
 const val radius = 0.1f
 const val degree = 3.14f *2f / steps
 

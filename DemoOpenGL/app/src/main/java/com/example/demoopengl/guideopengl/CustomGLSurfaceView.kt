@@ -12,7 +12,7 @@ private var previousX: Float = 0f
 private var previousY: Float = 0f
 
 class CustomGLSurfaceView: GLSurfaceView {
-    private lateinit var renderer: CustomMyGLRenderer
+     lateinit var renderer: CustomMyGLRenderer
     constructor(context: Context?) : super(context) {
         init()
         renderMode = RENDERMODE_WHEN_DIRTY

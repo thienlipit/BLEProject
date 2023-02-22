@@ -4,13 +4,17 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.util.Log
 import com.example.demoopengl.guideopengl.guideshape.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.properties.Delegates
 
 class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
+    var zoom = 6f
+
     private lateinit var mTriangle: Triangle
     private lateinit var mSquare: Square2
     private lateinit var mLoadMap: LoadMap
@@ -41,13 +45,16 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
     private val rotationMatrix = FloatArray(16)
     override fun onDrawFrame(unused: GL10) {
+        Log.d("aaa", zoom.toString())
+        val ratio: Float = 1080f / 2022f
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, zoom, 1000f)
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
         //-----------start define a camera view
         // Set the camera position (View matrix)
         Matrix.setLookAtM(viewMatrix, 0,
-            0f, 0f, 5f,
+            0f, 0f, 10f,
             0f, 0f, 0f,
             0f, 1.0f, 0.0f)
 
@@ -74,9 +81,11 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 //        mTriangle.draw(scratch)
 
 //        newSquare.draw(unused)
-//        circle.draw(scratch)
+        circle.draw(scratch)
+//        var Kq = demoShape().count
+//        Log.d("TAG", Kq.toString())
 
-        girdline.draw(scratch, 3, 0.01f)
+//        girdline.draw(scratch, 3, 0.01f)
 
 
     }
@@ -89,6 +98,7 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
         // Sets the current view port to the new size.
+        Log.d("width + height", width.toString()+ "  " + height.toString())
         GLES20.glViewport(0, 0, width, height)
 
         //----start define projection
@@ -96,8 +106,10 @@ class CustomMyGLRenderer(var context: Context): GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 1000f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, zoom, 1000f)
         //----end define projection
+
+        Log.d("Test", zoom.toString())
 
     }
 }
