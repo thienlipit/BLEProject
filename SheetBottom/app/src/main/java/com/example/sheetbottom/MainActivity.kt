@@ -2,7 +2,9 @@ package com.example.sheetbottom
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.sheetbottom.databinding.ActivityMainBinding
@@ -17,6 +19,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val result = findViewById<EditText>(R.id.textView4)
+        var str = result.text.toString()
+        Log.d("AAA", str)
 
         //#2 Initializing the BottomSheetBehavior
         bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheet))
@@ -42,6 +48,9 @@ class MainActivity : AppCompatActivity() {
 
         //#4 Changing the BottomSheet State on ButtonClick
         binding.buttonBottomSheetPersistent.setOnClickListener {
+            str = result.text.toString()
+            Log.d("AAA", str)
+
             bottomSheetBehavior.peekHeight = 100
             val state =
                 if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
