@@ -2,10 +2,16 @@ package com.example.mybottomsheetfragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button btnDemo;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -14,7 +20,13 @@ public class MainActivity extends AppCompatActivity {
         MyBottomSheetFragment myBottomSheetFragment = new MyBottomSheetFragment();
         myBottomSheetFragment.show(getSupportFragmentManager(), "AAA");
 
-//        MyBottomSheetFragment fragment = new MyBottomSheetFragment();
-//        fragment.show(getSupportFragmentManager(), "TAG");
+        btnDemo = findViewById(R.id.btn_demo);
+        btnDemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "click btn");
+                myBottomSheetFragment.show(getSupportFragmentManager(), "AAA");
+            }
+        });
     }
 }
