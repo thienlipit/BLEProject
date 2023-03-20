@@ -11,13 +11,16 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class MyBottomSheetFragment extends BottomSheetDialogFragment {
+    private BottomSheetBehavior bottomSheetBehavior;
     private Button btnLogin;
     private ImageView header_Arrow_Image;
+//    private FragmentController fragmentController;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,13 +34,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         btnLogin = view.findViewById(R.id.btnLogin);
         header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
 
-        BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from((FrameLayout) view.getParent());
+        bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottom_sheet_layout));
+
+        bottomSheetBehavior.setPeekHeight(450);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("Dialog", "clicked");
-                bottomSheetBehavior.setPeekHeight(100);
+                bottomSheetBehavior.setPeekHeight(450);
             }
         });
 
@@ -47,10 +52,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                 Log.d("KK", "login btn clicked");
             }
         });
+//        getActivity().getFragmentManager().beginTransaction().remove(this).commit();
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if( newState == BottomSheetBehavior.STATE_HIDDEN){
+                    bottomSheetBehavior.setPeekHeight(450);
+                    dismiss();
+                }
             }
 
             @Override
@@ -59,5 +69,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                 header_Arrow_Image.setRotation(slideOffset * 180);
             }
         });
+    }
+
+    public BottomSheetBehavior getBottomSheetBehavior() {
+        return bottomSheetBehavior;
     }
 }
