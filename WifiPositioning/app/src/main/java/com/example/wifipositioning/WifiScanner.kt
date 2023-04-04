@@ -13,6 +13,7 @@ class WifiScanner(private val context: Context) : BroadcastReceiver() {
     private val wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
     private val handler = Handler()
     private val runnable: Runnable = object : Runnable {
+        @SuppressLint("MissingPermission")
         override fun run() {
             wifiManager.startScan()
             handler.postDelayed(this, 3000) // Scan every 3 seconds
