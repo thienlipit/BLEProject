@@ -2,17 +2,14 @@ package com.example.wifipositioning
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanRecord
-import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.wifi.ScanResult
+import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
-import android.os.ParcelUuid
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -21,6 +18,7 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+    lateinit var receiver: WifiScanner
     /*private var requestBluetoothOn =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result ->
@@ -93,6 +91,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestAllPermission()
 
+        receiver = WifiScanner(this)
+
         val hasWifiRTT = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             applicationContext.packageManager.hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)
         } else {
@@ -101,28 +101,29 @@ class MainActivity : AppCompatActivity() {
         Log.d("Wifi RTT", hasWifiRTT.toString())
 
         val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiManager.startScan()
-//        val currentConnection = wifiManager.connectionInfo
-//        Log.d(TAG, currentConnection.toString())
-//        val bssid = currentConnection.bssid
-//        Log.d(TAG, bssid)
+//        wifiManager.scanResults
 
-        val results: List<ScanResult> = wifiManager.scanResults
 
-        for (result in results) {
-            // Get the RSSI and MAC address of the WiFi AP
-            val rssi: Int = result.level
-            val macAddress: String = result.BSSID
+        val currentConnection = wifiManager.connectionInfo
+        Log.d(TAG, currentConnection.toString())
 
-            // Calculate the distance between the device and the WiFi AP
-            val distance = calculateDistance(rssi, result.frequency)
+//
+//        val results: List<ScanResult> = wifiManager.scanResults
+//
+//        for (result in results) {
+//            // Get the RSSI and MAC address of the WiFi AP
+//            val rssi: Int = result.level
+//            val macAddress: String = result.BSSID
+//
+//            // Calculate the distance between the device and the WiFi AP
+//            val distance = calculateDistance(rssi, result.frequency)
+//
+//            val wf = result.toString()
+//            Log.d("TAG", "Distance: $distance WiFi: $wf")
+//
+//        }
 
-            val wf = result.toString()
-            Log.d("TAG", "WiFi: $wf")
-
-        }
-
-        val SERVICE_UUID = "0000FEAA-0000-1000-8000-00805F9B34FB"
+/*        val SERVICE_UUID = "0000FEAA-0000-1000-8000-00805F9B34FB"
         val AOADATA_UUID = byteArrayOf(
             0xBF.toByte(),
             0x24.toByte(),
@@ -199,7 +200,31 @@ class MainActivity : AppCompatActivity() {
 //          wifiLocation.setLatitude(result.latitude)
 //          wifiLocation.setLongitude(result.longitude)
 //          val bearing: Float = myLocation.bearingTo(wifiLocation)
-//          Log.d("TAG", "Direction of WiFi signal: $bearing")
+//          Log.d("TAG", "Direction of WiFi signal: $bearing")*/
+
+
+
+
+
+
+
+
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        receiver.startScanning()
+        val filter = IntentFilter()
+        filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        receiver.stopScanning()
+        unregisterReceiver(receiver)
     }
 
 
