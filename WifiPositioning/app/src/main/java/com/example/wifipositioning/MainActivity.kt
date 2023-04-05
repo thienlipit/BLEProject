@@ -2,6 +2,7 @@ package com.example.wifipositioning
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -24,7 +25,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var receiver: WifiScanner
-    /*private var requestBluetoothOn =
+    private var requestBluetoothOn =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 //deny
                 Log.d("TAG", "Bluetooth is OFF")
             }
-        }*/
+        }
 
     @RequiresApi(Build.VERSION_CODES.N)
     val requestMultiplePermissionsAPI30Below =
