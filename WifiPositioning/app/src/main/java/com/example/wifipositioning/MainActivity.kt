@@ -25,17 +25,17 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var receiver: WifiScanner
-    private var requestBluetoothOn =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                //granted
-                Log.d("TAG", "Bluetooth is ON")
-            } else {
-                //deny
-                Log.d("TAG", "Bluetooth is OFF")
-            }
-        }
+//    private var requestBluetoothOn =
+//        registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()) { result ->
+//            if (result.resultCode == Activity.RESULT_OK) {
+//                //granted
+//                Log.d("TAG", "Bluetooth is ON")
+//            } else {
+//                //deny
+//                Log.d("TAG", "Bluetooth is OFF")
+//            }
+//        }
 
     @RequiresApi(Build.VERSION_CODES.N)
     val requestMultiplePermissionsAPI30Below =
