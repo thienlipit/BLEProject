@@ -14,28 +14,31 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.util.*
+import kotlin.collections.ArrayList
 
-
+const val NUMBERPOINT = 20
 class MainActivity : AppCompatActivity() {
+    var dataListValue: MutableList<Int> = mutableListOf()
+    var index = 1f
+    var indexCombinedChart = 1f
     lateinit var receiver: WifiScanner
-//    private var requestBluetoothOn =
-//        registerForActivityResult(
-//            ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                //granted
-//                Log.d("TAG", "Bluetooth is ON")
-//            } else {
-//                //deny
-//                Log.d("TAG", "Bluetooth is OFF")
-//            }
-//        }
+    private var requestBluetoothOn =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                //granted
+                Log.d("TAG", "Bluetooth is ON")
+            } else {
+                //deny
+                Log.d("TAG", "Bluetooth is OFF")
+            }
+        }
 
     @RequiresApi(Build.VERSION_CODES.N)
     val requestMultiplePermissionsAPI30Below =
@@ -70,11 +73,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestAllPermission()
         val combinedChart = findViewById<CombinedChart>(R.id.combinedChart)
-        combinedChart(combinedChart)
-
         val lineChart = findViewById<LineChart>(R.id.lineChart1)
-        lineChart(lineChart)
 
+
+        val timer = Timer()
+        val task: TimerTask = Helper {
+            Log.d(this::class.java.name, "random: $it")
+            if(dataListValue.size < 20){
+                dataListValue.add(it)
+            } else {
+                dataListValue.removeAt(0)
+                dataListValue.add(it)
+            }
+        }
+
+        timer.scheduleAtFixedRate(task, 200, 1000)
+
+        lineChart(lineChart)
+        combinedChart(combinedChart)
 
 
         receiver = WifiScanner(this)
@@ -154,9 +170,6 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-
-
-
 //                if (scanRecord != null && scanRecord.serviceUuids != null && scanRecord.serviceUuids.contains(
 //                        ParcelUuid.fromString(SERVICE_UUID))) {
 //                    val serviceData = scanRecord.getServiceData(ParcelUuid.fromString(SERVICE_UUID))
@@ -170,13 +183,10 @@ class MainActivity : AppCompatActivity() {
 //                        Log.d("AOD", aod.toString())
 //                    }
 //                }
-
-
             }
         }
 
         scanner.startScan(null, settings, scanCallback)
-
         // Use the location of the WiFi AP to estimate the location and direction of the WiFi source
 //          val wifiLocation = Location("")
 //          wifiLocation.setLatitude(result.latitude)
@@ -184,35 +194,6 @@ class MainActivity : AppCompatActivity() {
 //          val bearing: Float = myLocation.bearingTo(wifiLocation)
 //          Log.d("TAG", "Direction of WiFi signal: $bearing")*/
     }
-
-    private fun dataChart(): LineDataSet {
-        val data = LineData()
-        val dataValues = intArrayOf(55, 59, 50, 54, 58)
-
-
-        val entries = ArrayList<Entry>()
-
-        for (index in dataValues.indices) {
-            entries.add(Entry(index.toFloat(), dataValues[index].toFloat()))
-        }
-
-        val set = LineDataSet(entries, "Request Ots approved")
-        set.color = Color.GREEN
-        set.lineWidth = 2.5f
-//        set.circleColor = Color.GREEN
-        set.circleRadius = 5f
-        set.fillColor = Color.GREEN
-        set.mode = LineDataSet.Mode.CUBIC_BEZIER
-        set.setDrawValues(true)
-        set.valueTextSize = 10f
-        set.valueTextColor = Color.GREEN
-
-        set.axisDependency = YAxis.AxisDependency.LEFT
-//        data.addDataSet(set)
-
-        return set
-    }
-
 
     override fun onResume() {
         super.onResume()
@@ -265,6 +246,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun dataChart(entries: ArrayList<Entry>): LineDataSet {
+//        val entries = ArrayList<Entry>()
+        if( dataListValue.size > 0){
+            val newData = Entry(indexCombinedChart, dataListValue.last().toFloat())
+            entries.add(newData)
+            index++
+            if(dataListValue.size > 19){
+                entries.removeFirst()
+            }
+        }
+
+        val set = LineDataSet(entries, "Request Ots approved")
+        set.color = Color.GREEN
+        set.lineWidth = 2.5f
+        set.circleRadius = 5f
+        set.fillColor = Color.GREEN
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
+        set.setDrawValues(true)
+        set.valueTextSize = 10f
+        set.valueTextColor = Color.GREEN
+
+        set.axisDependency = YAxis.AxisDependency.LEFT
+        return set
+
+
+/*        val dataValues = intArrayOf(55, 59, 50, 54, 58)
+        val entries = ArrayList<Entry>()
+        for (index in dataValues.indices) {
+            entries.add(Entry(index.toFloat(), dataValues[index].toFloat()))
+        }
+
+        val set = LineDataSet(entries, "Request Ots approved")
+        set.color = Color.GREEN
+        set.lineWidth = 2.5f
+        set.circleRadius = 5f
+        set.fillColor = Color.GREEN
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
+        set.setDrawValues(true)
+        set.valueTextSize = 10f
+        set.valueTextColor = Color.GREEN
+
+        set.axisDependency = YAxis.AxisDependency.LEFT
+        return set*/
+    }
+
     fun combinedChart(combinedChart: CombinedChart){
         combinedChart.setDrawGridBackground(false)
         combinedChart.description.isEnabled = false
@@ -273,38 +299,86 @@ class MainActivity : AppCompatActivity() {
         combinedChart.isDragEnabled = true
         combinedChart.setScaleEnabled(true)
 
+        val lineEntries = arrayListOf<Entry>()
+        for (i in 0..9) {
+            lineEntries.add(Entry(i.toFloat(), (Math.random() * 100).toFloat()))
+        }
+        val lineDataSet = LineDataSet(lineEntries, "Line Data")
+        lineDataSet.color = Color.BLUE
+        lineDataSet.setDrawValues(false)
+        // Create a CombinedData object with the line and bar data
         val data = CombinedData()
-        val lineDatas = LineData()
-        lineDatas.addDataSet(dataChart() as ILineDataSet)
+        data.setData(LineData(lineDataSet))
 
-        data.setData(lineDatas)
+// Set the data to the chart and update it
         combinedChart.data = data
+
+//        val data = CombinedData()
+//        val lineDatas = LineData()
+//        val entries = ArrayList<Entry>()
+//        lineDatas.addDataSet(dataChart(entries) as ILineDataSet)
+//
+//        data.setData(lineDatas)
+//        combinedChart.data = data
+//        val timer11 = Timer()
+//        timer11.scheduleAtFixedRate(object : TimerTask() {
+//            override fun run() {
+//                lineDatas.addDataSet(dataChart(entries) as ILineDataSet)
+//                data.setData(lineDatas)
+//                combinedChart.data = data
+//
+//                data.notifyDataChanged()
+//                combinedChart.notifyDataSetChanged()
+//                combinedChart.invalidate()
+//            }
+//        }, 0, 1000) // Repeat every 1000ms (1 second)
+
         combinedChart.invalidate()
     }
 
-    fun lineChart(lineChart: LineChart){
+    private fun lineChart(lineChart: LineChart){
         lineChart.setDrawGridBackground(false)
         lineChart.description.isEnabled = false
         lineChart.axisRight.isEnabled = false
         lineChart.setTouchEnabled(true)
         lineChart.isDragEnabled = true
         lineChart.setScaleEnabled(true)
+        lineChart.xAxis.isEnabled = false
 
-        val entries = listOf(
-            Entry(0f, 1f),
-            Entry(1f, 4f),
-            Entry(2f, 2f),
-            Entry(3f, 5f),
-            Entry(4f, 3f),
-            Entry(3f, 1f)
-        )
+        val dataSet = LineDataSet(null, "Data")
+        dataSet.color = Color.RED
+        dataSet.setDrawValues(false)
+        dataSet.setDrawCircles(false)
+        lineChart.data = LineData(dataSet)
 
-        val dataSet = LineDataSet(entries, "Label for dataset")
-        dataSet.color = ContextCompat.getColor(this, R.color.purple_500)
-        dataSet.valueTextColor = ContextCompat.getColor(this, R.color.teal_700)
-        val lineData = LineData(dataSet)
+        val timer11 = Timer()
+        timer11.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                updateDataLineChart(dataSet, lineChart)
+            }
+        }, 0, 1000) // Repeat every 1000ms (1 second)
 
-        lineChart.data = lineData
         lineChart.invalidate()
     }
+
+    fun updateDataLineChart(dataSet: LineDataSet, lineChart: LineChart){
+        if(dataListValue.size > 0){
+            val newData = Entry(index, dataListValue.last().toFloat())
+            index++
+            dataSet.addEntry(newData)
+            dataSet.setDrawValues(true)
+            lineChart.data = LineData(dataSet)
+            dataSet.notifyDataSetChanged()
+            lineChart.notifyDataSetChanged()
+            lineChart.invalidate()
+            if(dataListValue.size > 19){
+                dataSet.removeFirst()
+                lineChart.data = LineData(dataSet)
+                dataSet.notifyDataSetChanged()
+                lineChart.notifyDataSetChanged()
+                lineChart.invalidate()
+            }
+        }
+    }
+
 }

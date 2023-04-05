@@ -35,7 +35,7 @@ class WifiScanner(private val context: Context) : BroadcastReceiver() {
             for (result in results) {
                 val ssid: String = result.BSSID
                 val rssi: Int = result.level
-                Log.d("AAA", "$ssid  ---  $rssi")
+//                Log.d("AAA", "$ssid  ---  $rssi")
                 // Do something with the SSID and RSSI
             }
         }
